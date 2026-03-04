@@ -1,94 +1,97 @@
 "use client";
-
+import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { 
-  LayoutDashboard, 
-  Search, 
-  FileText, 
-  ShoppingCart, 
-  User, 
-  LogOut,
-  Zap 
+  LayoutDashboard, Search, MessageSquareDiff, 
+  BarChart3, ClipboardList, User, LogOut, Flame,
+  ChevronLeft, ChevronRight 
 } from "lucide-react";
-import { cn } from "@/lib/utils"; // Fungsi bawaan shadcn untuk gabung class
+import { cn } from "@/lib/utils";
 
-export const Sidebar = () => {
+export function Sidebar({ isMinimized, setIsMinimized }: { 
+  isMinimized: boolean, 
+  setIsMinimized: (val: boolean) => void 
+}) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const menuItems = [
-    { name: "Overview", href: "/dashboard/overview", icon: LayoutDashboard },
-    { name: "Riset Produk", href: "/dashboard/riset", icon: Search },
-    { name: "Laporan Penjualan", href: "/dashboard/laporan", icon: FileText },
-    { name: "Transaksi", href: "/dashboard/transaksi", icon: ShoppingCart },
+    { name: "Overview", href: "/dashboard/overview", icon: <LayoutDashboard size={20} /> },
+    { name: "Pantau Stok", href: "/dashboard/riset", icon: <Search size={20} /> },
+    { name: "Chatbot AI", href: "/dashboard/ai-assistant", icon: <MessageSquareDiff size={20} /> },
+    { name: "Laporan Harga", href: "/dashboard/laporan", icon: <BarChart3 size={20} /> },
+    { name: "Riwayat Pesanan", href: "/dashboard/transaksi", icon: <ClipboardList size={20} /> },
+    { name: "Profil Mitra", href: "/dashboard/profile", icon: <User size={20} /> },
   ];
 
   return (
-    <div className="w-64 h-screen bg-[#1B4D3E] text-white flex flex-col p-6 shadow-xl">
-      {/* Logo Kasir.id sesuai image_7ec558.jpg */}
-      <div className="flex items-center gap-2 mb-12 px-2">
-        <Zap className="text-emerald-400 fill-emerald-400" size={24} />
-        <span className="text-xl font-bold tracking-tight">Kasir.id</span>
+    <div className={cn(
+      "bg-gradient-to-b from-red-950 via-red-900 to-stone-950 min-h-screen flex flex-col text-white fixed left-0 top-0 shadow-2xl border-r border-red-800/30 transition-all duration-300 z-50",
+      isMinimized ? "w-20" : "w-64"
+    )}>
+      
+      <button 
+        onClick={() => setIsMinimized(!isMinimized)}
+        className="absolute -right-3 top-20 bg-red-600 text-white p-1 rounded-full border-2 border-red-950 hover:bg-red-500 z-50"
+      >
+        {isMinimized ? <ChevronRight size={14} /> : <ChevronLeft size={14} /> }
+      </button>
+
+      {/* Logo Area - Centering Fix */}
+      <div className={cn("p-8 flex items-center gap-3", isMinimized && "p-0 h-24 justify-center")}>
+        <div className="bg-red-600 p-2 rounded-xl text-white shrink-0 shadow-lg shadow-red-900/50">
+          <Flame size={24} />
+        </div>
+        {!isMinimized && (
+          <span className="font-bold text-xl tracking-tight uppercase whitespace-nowrap">
+            Grosir<span className="text-red-500">Cabai</span>
+          </span>
+        )}
       </div>
 
-      {/* Menu Section */}
-      <div className="flex-1">
-        <p className="text-xs font-semibold text-emerald-200/50 uppercase tracking-wider mb-4 px-2">
-          Menu
-        </p>
-        <nav className="space-y-2">
-          {menuItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group",
-                  isActive 
-                    ? "bg-white text-[#1B4D3E] shadow-lg" 
-                    : "hover:bg-emerald-800/50 text-emerald-100"
-                )}
-              >
-                <item.icon size={20} className={isActive ? "text-[#1B4D3E]" : "text-emerald-300 group-hover:text-white"} />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            );
-          })}
-          
-          {/* Menu AI Assistant (Tambahan untuk Hackathon) */}
+      {/* Navigation - Profile Centering Fix */}
+      <nav className="flex-1 px-4 space-y-2 mt-2">
+        {!isMinimized && (
+          <p className="px-4 text-[10px] uppercase tracking-[0.2em] text-red-400/60 font-bold mb-4">Menu</p>
+        )}
+        
+        {menuItems.map((item) => (
           <Link
-            href="/dashboard/ai-insight"
+            key={item.href}
+            href={item.href}
             className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-xl mt-4 border border-emerald-500/30 bg-emerald-900/30 hover:bg-emerald-800 transition-all",
-              pathname === "/dashboard/ai-insight" ? "bg-emerald-500 text-white" : "text-emerald-200"
+              "flex items-center rounded-2xl transition-all duration-300 group h-12",
+              isMinimized ? "justify-center px-0" : "px-4 gap-4",
+              pathname === item.href 
+                ? "bg-white text-red-950 shadow-xl font-bold" 
+                : "hover:bg-red-800/40 text-red-100"
             )}
           >
-            <Zap size={20} className="text-yellow-400 fill-yellow-400" />
-            <span className="font-medium italic">AI Assistant</span>
+            <span className={cn(
+              "shrink-0",
+              pathname === item.href ? "text-red-600" : "text-red-400 group-hover:text-red-200"
+            )}>
+              {item.icon}
+            </span>
+            {!isMinimized && <span className="text-sm tracking-wide">{item.name}</span>}
           </Link>
-        </nav>
-      </div>
+        ))}
+      </nav>
 
-      {/* Profile Section sesuai image_7ec558.jpg */}
-      <div className="mt-auto border-t border-emerald-800/50 pt-6">
-        <p className="text-xs font-semibold text-emerald-200/50 uppercase mb-4 px-2">Profile</p>
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-900/40 border border-emerald-800/50 mb-4">
-          <div className="bg-emerald-700 p-2 rounded-lg">
-            <User size={18} />
-          </div>
-          <div className="overflow-hidden">
-            <p className="text-sm font-bold truncate">Nama User</p>
-            <p className="text-[10px] text-emerald-400 truncate">user@example.com</p>
-          </div>
-        </div>
-
-        {/* Logout Button */}
-        <button className="flex items-center gap-2 w-full px-4 py-3 text-red-300 hover:bg-red-950/30 hover:text-red-100 rounded-xl transition-colors">
-          <LogOut size={18} />
-          <span className="text-sm font-medium">Log out</span>
+      {/* Footer Area - Logout Fix */}
+      <div className="p-4 border-t border-red-900/50">
+        <button 
+          onClick={() => router.push("/")}
+          className={cn(
+            "flex items-center h-12 w-full text-stone-400 hover:text-white hover:bg-red-600/20 rounded-xl transition-all group",
+            isMinimized ? "justify-center px-0" : "px-4 gap-4"
+          )}
+        >
+          <LogOut size={20} className="shrink-0 group-hover:text-red-400" />
+          {!isMinimized && <span className="font-medium text-sm">Keluar Akun</span>}
         </button>
       </div>
     </div>
   );
-};
+}
