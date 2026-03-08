@@ -2,16 +2,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { 
-  LayoutDashboard, Search, MessageSquareDiff, 
+import {
+  LayoutDashboard, Search, MessageSquareDiff,
   BarChart3, ClipboardList, User, LogOut, Flame,
-  ChevronLeft, ChevronRight 
+  Menu, X // Tambahkan Menu dan X (untuk ikon tutup)
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function Sidebar({ isMinimized, setIsMinimized }: { 
-  isMinimized: boolean, 
-  setIsMinimized: (val: boolean) => void 
+export function Sidebar({ isMinimized, setIsMinimized }: {
+  isMinimized: boolean,
+  setIsMinimized: (val: boolean) => void
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -30,12 +30,16 @@ export function Sidebar({ isMinimized, setIsMinimized }: {
       "bg-gradient-to-b from-red-950 via-red-900 to-stone-950 min-h-screen flex flex-col text-white fixed left-0 top-0 shadow-2xl border-r border-red-800/30 transition-all duration-300 z-50",
       isMinimized ? "w-20" : "w-64"
     )}>
-      
-      <button 
+
+      {/* Tombol Toggle di dalam Sidebar */}
+      <button
         onClick={() => setIsMinimized(!isMinimized)}
-        className="absolute -right-3 top-20 bg-red-600 text-white p-1 rounded-full border-2 border-red-950 hover:bg-red-500 z-50"
+        className={cn(
+          "absolute top-18 bg-red-600 text-white p-1.5 rounded-lg border border-red-800 hover:bg-red-500 z-50 transition-all shadow-md",
+          isMinimized ? "right-6" : "right-4" // Menyesuaikan posisi agar tetap di dalam
+        )}
       >
-        {isMinimized ? <ChevronRight size={14} /> : <ChevronLeft size={14} /> }
+        {isMinimized ? <Menu size={16} /> : <X size={16} />}
       </button>
 
       {/* Logo Area - Centering Fix */}
@@ -55,7 +59,7 @@ export function Sidebar({ isMinimized, setIsMinimized }: {
         {!isMinimized && (
           <p className="px-4 text-[10px] uppercase tracking-[0.2em] text-red-400/60 font-bold mb-4">Menu</p>
         )}
-        
+
         {menuItems.map((item) => (
           <Link
             key={item.href}
@@ -63,8 +67,8 @@ export function Sidebar({ isMinimized, setIsMinimized }: {
             className={cn(
               "flex items-center rounded-2xl transition-all duration-300 group h-12",
               isMinimized ? "justify-center px-0" : "px-4 gap-4",
-              pathname === item.href 
-                ? "bg-white text-red-950 shadow-xl font-bold" 
+              pathname === item.href
+                ? "bg-white text-red-950 shadow-xl font-bold"
                 : "hover:bg-red-800/40 text-red-100"
             )}
           >
@@ -81,7 +85,7 @@ export function Sidebar({ isMinimized, setIsMinimized }: {
 
       {/* Footer Area - Logout Fix */}
       <div className="p-4 border-t border-red-900/50">
-        <button 
+        <button
           onClick={() => router.push("/")}
           className={cn(
             "flex items-center h-12 w-full text-stone-400 hover:text-white hover:bg-red-600/20 rounded-xl transition-all group",
