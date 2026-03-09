@@ -1,87 +1,118 @@
 "use client";
-import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/ai-badge";
-import {
-  ArrowRight,
-  TrendingUp,
-  ShieldCheck,
-  BarChart2,
-  Globe
-} from "lucide-react";
+import { Search } from "lucide-react";
+import Link from "next/link";
+
+const produkData = [
+  { id: 1, nama: "Cabai Merah Keriting", harga: "Rp 45.000", deskripsi: "Varian premium dengan rasa pedas sedang yang khas. Kualitas super, petik segar langsung dari kebun petani lokal dengan tingkat kematangan 90-100%." },
+  { id: 2, nama: "Cabai Rawit Merah", harga: "Rp 50.000", deskripsi: "Cabai dengan tingkat kepedasan tinggi. Diproses dengan standar kebersihan ketat, sangat cocok untuk industri kuliner dan sambal kemasan." },
+  { id: 3, nama: "Cabai Hijau Besar", harga: "Rp 35.000", deskripsi: "Memiliki tekstur renyah dengan rasa yang tidak terlalu pedas. Sangat segar, disortir untuk memastikan ukuran seragam dan bebas dari cacat." },
+];
 
 export default function LandingPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedProduk, setSelectedProduk] = useState<any>(null);
+  const router = useRouter();
+
+  const filteredProduk = produkData.filter((p) =>
+    p.nama.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation Bar */}
-      <nav className="flex items-center justify-between px-10 py-6 border-b border-stone-100 sticky top-0 bg-white/80 backdrop-blur-md z-50">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white">
-            <Globe size={18} />
-          </div>
-          <span className="font-bold text-xl uppercase tracking-tighter">
-            Grosir<span className="text-red-600">Cabai</span>
-          </span>
+      {/* Navbar */}
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-stone-100 flex items-center justify-between px-8 py-6">
+        <h1 className="text-2xl font-bold font-serif text-red-600">CABAI.ID</h1>
+        <div className="hidden md:flex gap-8 text-sm font-medium text-stone-600">
+          <Link href="/" className="hover:text-red-600">Home</Link>
+          <Link href="#about" className="hover:text-red-600">About</Link>
+          <Link href="#contact" className="hover:text-red-600">Contact</Link>
         </div>
-        <div className="flex items-center gap-6">
-          <Link href="/auth/selection">
-            <Button className="bg-red-600 ...">Gabung Mitra</Button>
-          </Link>
-        </div>
+        <Link href="/auth/login"><Button className="rounded-full bg-stone-900">Masuk Mitra</Button></Link>
       </nav>
 
       {/* Hero Section */}
-      <section className="px-10 py-24 max-w-7xl mx-auto text-center space-y-8">
-        <Badge className="bg-red-50 text-red-600 border-none px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em]">
-          Eksosistem Cabai Terbesar di Indonesia
-        </Badge>
-        <h1 className="text-6xl md:text-7xl font-serif font-bold text-stone-950 leading-[1.1]">
-          Amankan Stok <span className="text-red-600 underline decoration-stone-200 underline-offset-8">Cabai Segar</span> <br />
-          Langsung Dari Petani.
-        </h1>
-        <p className="text-stone-500 max-w-2xl mx-auto text-lg leading-relaxed">
-          Platform B2B khusus pengulak dan distributor besar. Pantau harga harian nasional dan dapatkan kuota stok harian dengan harga grosir terbaik.
+      <header className="relative h-[70vh] flex flex-col items-center justify-center text-center px-8">
+        <div className="absolute inset-0 bg-[url('/images/red-chili.png')] bg-fixed bg-center bg-cover opacity-10" />
+        <h2 className="relative z-10 text-6xl font-serif font-bold mb-6">Harga Cabai Terbaik, <br /> Langsung dari Petani.</h2>
+        <p className="relative z-10 text-stone-600 max-w-2xl mb-8">
+          Kami menyediakan berbagai jenis cabai dengan <b>kualitas premium</b>, dipanen pada tingkat kematangan optimal, dan disortir secara teliti. Nikmati jaminan <b>kesegaran maksimal</b>, harga grosir yang transparan, dan pengiriman cepat langsung ke lokasi bisnis Anda.
         </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <Link href="/auth/login">
-            <Button className="h-16 px-10 bg-stone-950 text-white rounded-[2rem] text-lg font-bold gap-3 hover:bg-red-600 transition-all shadow-2xl shadow-red-200">
-              Mulai Sourcing <ArrowRight size={20} />
-            </Button>
-          </Link>
-          <Link href="/auth/petani">
-            <Button variant="outline" className="h-16 px-10 rounded-[2rem] border-stone-200 text-stone-600 font-bold hover:bg-stone-50">
-              Portal Petani (Coming Soon)
-            </Button>
-          </Link>
+        <div className="relative z-10 w-full max-w-md">
+          <Search className="absolute left-4 top-4 text-stone-400" size={20} />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Cari jenis cabai..."
+            className="w-full h-14 pl-12 pr-4 rounded-full border border-stone-300 shadow-sm outline-none focus:border-red-600"
+          />
+        </div>
+      </header>
+
+      {/* Katalog Produk (Dinamis) */}
+      <section className="px-8 py-12 max-w-6xl mx-auto">
+        <h3 className="text-2xl font-bold mb-8">Pilihan Produk</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {filteredProduk.map((item) => (
+            <div key={item.id} className="border border-stone-100 rounded-3xl p-6 shadow-sm hover:shadow-lg transition-all">
+              <div onClick={() => setSelectedProduk(item)} className="cursor-pointer bg-stone-50 h-40 rounded-2xl mb-4 flex items-center justify-center">
+                <img src="/images/red-chili.png" alt={item.nama} className="h-32 object-contain hover:scale-105 transition-transform" />
+              </div>
+              <h4 className="font-bold text-lg">{item.nama}</h4>
+              <p className="text-sm text-stone-500 line-clamp-2 mt-2">{item.deskripsi}</p>
+              <div className="flex justify-between items-center mt-4">
+                <span className="font-bold text-red-600">{item.harga}</span>
+                <Button onClick={() => router.push("/auth/login")} size="sm" className="rounded-full">Beli</Button>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Live Market Snapshot (Dummy Data) */}
-      <section className="px-10 pb-24 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-10 bg-stone-50 rounded-[3rem] border border-stone-100">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-red-600 font-bold text-sm uppercase tracking-widest">
-              <TrendingUp size={16} /> Market Price
-            </div>
-            <h3 className="text-3xl font-bold text-stone-900">Rp 42.500 <span className="text-sm font-normal text-stone-400">/kg</span></h3>
-            <p className="text-xs text-stone-400">Rata-rata nasional Rawit Merah hari ini.</p>
+      {/* About & Contact Footer */}
+      <footer className="bg-stone-900 text-white px-8 py-16">
+        {/* Tambahkan id="contact" pada container atau elemen yang dituju agar scroll berfungsi */}
+        <div className="max-w-4xl mx-auto grid grid-col-1 md:grid-row-2 gap-12 text-center md:text-left items-start">
+
+          {/* Section About */}
+          <div id="about">
+            <h4 className="text-xl font-bold mb-4 text-red-500 text-center">Tentang Kami</h4>
+            <p className="text-stone-400 text-sm leading-relaxed">
+              CABAI.ID adalah marketplace B2B yang didedikasikan untuk digitalisasi rantai pasok komoditas cabai.
+              Misi kami adalah menjembatani kesenjangan antara petani lokal dan pelaku bisnis dengan menyediakan platform yang adil, transparan, dan efisien.
+            </p>
           </div>
-          <div className="space-y-2 border-x border-stone-200 px-8">
-            <div className="flex items-center gap-2 text-green-600 font-bold text-sm uppercase tracking-widest">
-              <BarChart2 size={16} /> Available Stock
-            </div>
-            <h3 className="text-3xl font-bold text-stone-900">450.2 Ton</h3>
-            <p className="text-xs text-stone-400">Total stok siap angkut di 12 titik pengepul.</p>
-          </div>
-          <div className="space-y-2 pl-4">
-            <div className="flex items-center gap-2 text-blue-600 font-bold text-sm uppercase tracking-widest">
-              <ShieldCheck size={16} /> Verified Farmers
-            </div>
-            <h3 className="text-3xl font-bold text-stone-900">1.280+</h3>
-            <p className="text-xs text-stone-400">Petani aktif yang sudah terverifikasi sistem.</p>
+
+          {/* Section Contact */}
+          <div id="contact">
+            <h4 className="text-xl font-bold mb-4 text-red-500 text-center">Kontak & Sosmed</h4>
+            <ul className="text-stone-400 text-sm space-y-2 text-center">
+              <li>Email: cs@cabai.id</li>
+              <li>WhatsApp: 0812-xxxx-xxxx</li>
+              <li>Alamat: Pusat Logistik Pertanian, Malang, Jawa Timur</li>
+              <li className="pt-4 font-bold text-white">Ikuti kami di media sosial:</li>
+              <li className="flex justify-center md:justify-center gap-4 text-red-400">
+                <a href="#">Instagram</a> | <a href="#">Facebook</a> | <a href="#">LinkedIn</a>
+              </li>
+            </ul>
           </div>
         </div>
-      </section>
+      </footer>
+
+      {/* PopUp Detail */}
+      {selectedProduk && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full relative">
+            <button onClick={() => setSelectedProduk(null)} className="absolute top-4 right-4 text-xl">✕</button>
+            <h3 className="text-2xl font-bold mb-4">{selectedProduk.nama}</h3>
+            <p className="text-stone-600 mb-6">{selectedProduk.deskripsi}</p>
+            <Button onClick={() => router.push("/auth/login")} className="w-full rounded-full">Beli Sekarang</Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

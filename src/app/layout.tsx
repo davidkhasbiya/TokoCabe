@@ -1,12 +1,13 @@
-import AIAssistant from "@/components/ai-assitant";
-import "./globals.css";
+import type { Metadata } from "next";
+import "./globals.css"; // <--- INI WAJIB ADA!
+import AiWrapper from "@/components/AiWrapper";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html>
+    <html lang="id">
       <body>
         {children}
-        <AIAssistant /> {/* Chatbot akan muncul di semua page */}
+        <AiWrapper/>
       </body>
     </html>
   );

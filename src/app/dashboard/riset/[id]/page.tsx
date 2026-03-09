@@ -10,6 +10,7 @@ import {
   User
 } from "lucide-react";
 import Link from "next/link";
+import CartDrawer from "@/components/cart-drawer";
 
 export default function DetailProdukPage() {
   const [selectedQty, setSelectedQty] = useState(100);
@@ -27,6 +28,8 @@ export default function DetailProdukPage() {
     setUlasanList([ulasanBaru, ...ulasanList]);
     setNamaBaru(""); setKomentarBaru(""); setRatingBaru(0);
   };
+
+  const [isCartOpen, setIsCartOpen] = useState(false); // State untuk drawer
 
   return (
     <div className="max-w-6xl mx-auto space-y-10">
@@ -112,12 +115,22 @@ export default function DetailProdukPage() {
               <Button variant="outline" className="rounded-xl font-bold text-xs">Chat Petani</Button>
             </div>
           </div>
+          {/* TOMBOL YANG DIPERBAIKI */}
+          <Button
+            type="button"
+            onClick={() => setIsCartOpen(true)}
+            className="w-full h-14 bg-stone-950 text-white rounded-2xl font-bold text-lg 
+                       flex items-center justify-center gap-3 
+                       hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/30 
+                       active:scale-[0.98] transition-all duration-300 ease-out"
+          >
+            <ShoppingCart size={20} />
+            Tambah ke Keranjang
+          </Button>
 
-          <Link href="/dashboard/checkout">
-            <Button className="flex-1 h-16 bg-stone-950 hover:bg-red-600 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-stone-200">
-              <ShoppingCart size={20} className="mr-2" /> Tambah ke Keranjang
-            </Button>
-          </Link>
+          {/* Komponen Drawer */}
+          <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
         </div>
       </div>
 
@@ -140,12 +153,12 @@ export default function DetailProdukPage() {
           </p>
         </Card>
       </div>
-      
+
       {/* --- FITUR RATING & REVIEW (Style Marketplace) --- */}
       <div className="space-y-8">
         <h3 className="text-3xl font-serif font-bold">Ulasan & Penilaian ({ulasanList.length})</h3>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          
+
           {/* Form Review */}
           <div className="lg:col-span-1">
             <div className="p-8 border border-stone-100 rounded-[2.5rem] bg-stone-50 space-y-5">
