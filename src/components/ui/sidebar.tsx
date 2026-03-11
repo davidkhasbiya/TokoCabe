@@ -23,7 +23,7 @@ export function Sidebar({ isMinimized, setIsMinimized }: {
     { name: "Laporan Harga", href: "/dashboard/laporan", icon: <BarChart3 size={20} /> },
     { name: "Riwayat Pesanan", href: "/dashboard/transaksi", icon: <ClipboardList size={20} /> },
     { name: "Profil Mitra", href: "/dashboard/profile", icon: <User size={20} /> },
-    { name: "Pengaturan", href: "/dashboard/settings", icon: <Settings size={20} /> },
+    { name: "Pengaturan", href: "/dashboard/setting", icon: <Settings size={20} /> },
   ];
 
   return (

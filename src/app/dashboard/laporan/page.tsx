@@ -1,12 +1,10 @@
 "use client";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/ai-badge";
 import { Input } from "@/components/ui/input";
-import { 
-  TrendingDown, TrendingUp, Minus, 
-  Calendar, MapPin, Search, Filter 
-} from "lucide-react";
+import { TrendingDown, TrendingUp, Calendar, Search, ArrowUpRight, Inbox } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function LaporanHargaPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,84 +18,75 @@ export default function LaporanHargaPage() {
     { produk: "Cabai Gendot", harga: "45.000", tren: "naik", selisih: "+2.000", wilayah: "Bandung, Jabar" },
   ];
 
-  // Fungsi filter sederhana untuk Frontend
-  const filteredData = dataHarga.filter(item => 
-    item.wilayah.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.produk.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData = dataHarga.filter((item) => 
+    item.produk.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.wilayah.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="space-y-8">
-      {/* Header & Search Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-3xl font-serif font-bold text-stone-950 text-red-600">Laporan Harga Harian</h1>
-          <p className="text-stone-500 text-sm flex items-center gap-2 mt-1">
-            <Calendar size={14} /> Update terakhir: 4 Maret 2026, 06:00 WIB
-          </p>
-        </div>
-
-        <div className="flex flex-1 max-w-2xl gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
-            <Input 
-              placeholder="Cari wilayah atau jenis cabai..." 
-              className="pl-12 h-12 rounded-2xl border-stone-200 bg-white shadow-sm focus:ring-red-600/20"
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <button className="h-12 px-5 bg-stone-900 text-white rounded-2xl flex items-center gap-2 hover:bg-stone-800 transition-all shadow-lg shadow-stone-200">
-            <Filter size={18} />
-            <span className="text-sm font-bold hidden sm:inline">Filter</span>
-          </button>
-        </div>
+    <div className="space-y-8 animate-in fade-in duration-700">
+      {/* Header & Market Pulse */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          { title: "Rata-rata Harga", val: "Rp 32.500", sub: "Stabil (+0.2%)" },
+          { title: "Komoditas Top", val: "Rawit Merah", sub: "Naik 4.8% hari ini" },
+          { title: "Volume Stok", val: "1.250 Ton", sub: "Tersedia di 12 titik" }
+        ].map((item, i) => (
+          <Card key={i} className="p-6 rounded-[2rem] border-none shadow-xl shadow-stone-100 bg-stone-950 text-white">
+            <p className="text-stone-400 text-[10px] uppercase font-bold tracking-widest mb-2">{item.title}</p>
+            <h3 className="text-2xl font-bold">{item.val}</h3>
+            <p className="text-emerald-400 text-xs mt-2 flex items-center gap-1 font-bold"><ArrowUpRight size={14} />{item.sub}</p>
+          </Card>
+        ))}
       </div>
 
-      {/* Grid Harga Cabai */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredData.length > 0 ? (
-          filteredData.map((item, i) => (
-            <Card key={i} className="p-6 border-stone-100 rounded-[2.5rem] bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
-              <div className="flex justify-between items-start mb-6">
-                <div className={`p-3 rounded-2xl ${
-                  item.tren === 'naik' ? 'bg-red-50 text-red-600' : 
-                  item.tren === 'turun' ? 'bg-green-50 text-green-700' : 
-                  'bg-stone-50 text-stone-400'
-                }`}>
-                  {item.tren === 'naik' ? <TrendingUp size={20} /> : 
-                   item.tren === 'turun' ? <TrendingDown size={20} /> : 
-                   <Minus size={20} />}
+      {/* Search Bar */}
+      <div className="bg-white p-4 rounded-3xl border border-stone-100 shadow-sm flex items-center gap-4">
+        <Search className="text-stone-400 ml-2" size={20} />
+        <Input 
+          placeholder="Cari komoditas atau daerah (Contoh: Rawit, Cianjur)..." 
+          className="h-12 border-none text-lg focus-visible:ring-0"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      {/* Dynamic Data Grid */}
+      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <AnimatePresence>
+          {filteredData.length > 0 ? (
+            filteredData.map((item, i) => (
+              <motion.div 
+                key={item.produk}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="bg-white p-6 rounded-[2.5rem] border border-stone-100 shadow-sm hover:shadow-xl transition-all flex items-center justify-between group"
+              >
+                <div className="flex gap-4 items-center">
+                  <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center transition-colors", 
+                    item.tren === 'naik' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-700')}>
+                    {item.tren === 'naik' ? <TrendingUp size={24} /> : <TrendingDown size={24} />}
+                  </div>
+                  <div>
+                    <p className="font-bold text-stone-900 group-hover:text-red-600 transition-colors">{item.produk}</p>
+                    <p className="text-[10px] text-stone-400 font-bold uppercase tracking-widest">{item.wilayah}</p>
+                  </div>
                 </div>
-                <Badge className={`border-none text-[10px] font-bold ${
-                  item.tren === 'naik' ? 'bg-red-100 text-red-700' : 
-                  item.tren === 'turun' ? 'bg-green-100 text-green-700' : 
-                  'bg-stone-100 text-stone-500'
-                }`}>
-                  {item.selisih}
-                </Badge>
-              </div>
-
-              <div className="space-y-1">
-                <h4 className="font-bold text-stone-900 group-hover:text-red-600 transition-colors">{item.produk}</h4>
-                <p className="text-[10px] text-stone-400 flex items-center gap-1 uppercase tracking-widest font-bold">
-                  <MapPin size={10} className="text-red-600" /> {item.wilayah}
-                </p>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-stone-50">
-                <p className="text-2xl font-bold text-stone-950">
-                  Rp {item.harga}
-                  <span className="text-xs font-normal text-stone-400 ml-1">/kg</span>
-                </p>
-              </div>
-            </Card>
-          ))
-        ) : (
-          <div className="col-span-full py-20 text-center">
-            <p className="text-stone-400 italic">Data wilayah tidak ditemukan...</p>
-          </div>
-        )}
-      </div>
+                <div className="text-right">
+                  <p className="font-black text-lg text-stone-950">Rp {item.harga}</p>
+                  <p className={cn("text-xs font-bold", item.tren === 'naik' ? 'text-red-600' : 'text-green-600')}>{item.selisih}</p>
+                </div>
+              </motion.div>
+            ))
+          ) : (
+            <motion.div className="col-span-full py-20 flex flex-col items-center justify-center text-stone-400">
+              <Inbox size={48} className="mb-4 opacity-50" />
+              <p className="italic">Data tidak ditemukan untuk "{searchTerm}"</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
