@@ -66,4 +66,4 @@ npm run dev
 
 ### 👥 Tim Pengembang
 **Ahmad David Khasbiya - Lead Developer & Product Designer**
-**© 2026 GrosirCabe - Solusi Rantai Pasok Segar Indonesia. Dibuat untuk Hackathon Mayar.id.**
+## © 2026 GrosirCabe - Solusi Rantai Pasok Segar Indonesia. Dibuat untuk Hackathon Mayar.id.##
