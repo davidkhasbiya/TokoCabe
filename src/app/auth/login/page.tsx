@@ -9,24 +9,21 @@ import { ArrowLeft, ShoppingBag, Tractor } from "lucide-react";
 // 1. Import Firebase
 import { auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 
 export default function LoginPage() {
     const router = useRouter();
 
     // 2. Fungsi Login Google
     const handleGoogleLogin = async () => {
+        // Tambahkan pengecekan ini
+        if (typeof window === "undefined") return;
+
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
             const token = await user.getIdToken();
 
-            // PASTI SUKSES DISINI:
             document.cookie = `firebase-auth-token=${token}; path=/; max-age=604800; SameSite=Lax;`;
-            console.log("Cookie berhasil diset oleh browser");
-
-            // Ganti router.push dengan cara paksa reload agar middleware baca cookie baru
             window.location.href = "/dashboard/overview";
         } catch (error) {
             console.error("Login Gagal:", error);
