@@ -1,6 +1,6 @@
 # GrosirCabe 🌶️
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Lihat%20Website-red?style=for-the-badge&logo=vercel)](https://URL_VERCEL_ANDA_DISINI)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Lihat%20Website-red?style=for-the-badge&logo=vercel)](https://grosir-cabe.vercel.app/)
 [![Hackathon](https://img.shields.io/badge/Hackathon-Mayar.id-blue?style=for-the-badge)](https://mayar.id)
 
 **GrosirCabe** adalah platform *marketplace* B2B (*Business-to-Business*) yang dirancang khusus untuk mendigitalisasi rantai pasok komoditas cabai di seluruh Indonesia.
@@ -50,19 +50,20 @@ Indonesia merupakan salah satu produsen cabai terbesar, namun rantai pasok yang 
 ---
 
 ## 📦 Cara Menjalankan Proyek
+
 ```bash
 # 1. Clone repository
-git clone [https://github.com/username/grosircabe.git](https://github.com/username/grosircabe.git)
+git clone [https://github.com/david_khasbiya/grosircabe.git](https://github.com/david_khassbiya/grosircabe.git)
 
 # 2. Install dependencies
 npm install
 
 # 3. Jalankan server pengembangan
 npm run dev
+```
 
 ---
 
-👥 Tim Pengembang
-[Nama Anda] - Lead Developer & Product Designer
-
-© 2026 GrosirCabe - Solusi Rantai Pasok Segar Indonesia. Dibuat untuk Hackathon Mayar.id.
+### 👥 Tim Pengembang
+**Ahmad David Khasbiya - Lead Developer & Product Designer**
+**© 2026 GrosirCabe - Solusi Rantai Pasok Segar Indonesia. Dibuat untuk Hackathon Mayar.id.**
