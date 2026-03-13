@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-static";
 import { useState } from "react";
 import { Sidebar } from "@/components/ui/sidebar"; // Sesuaikan path
 import { Header } from "@/components/Header";    // Sesuaikan path
